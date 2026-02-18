@@ -1,0 +1,47 @@
+i am having this url 
+
+List all meals by first letter
+www.themealdb.com/api/json/v1/1/search.php?f=a
+
+i want to return the item which has less ingridients from a to z so i wrote this code but it was not able to fetch the ingredients so can you see the code where i go wrong
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch meals by less ingredients</title>
+</head>
+<body>
+    <h1>Fetch meals by less ingredients</h1>
+    <div id="mealResults"></div>
+
+</body>
+<script>
+
+    const baseurl = "https://www.themealdb.com/api/json/v1/1/filter.php?f=a";
+
+    async function getMealByFirstLetter(x) {
+        try {
+            const response = await fetch(${baseurl}${x});
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            const meals = data.meals;
+            let output = <h2>Meals starting with '${x}':</h2><ul>;
+            if (Array.isArray(meals) && meals.length > 0) {
+                for (const meal of meals) {
+                    output += <li>${meal.strMeal}</li>;
+                }
+            } else {
+                output += '<li>No meals found.</li>';
+            }
+            output += '</ul>';
+            document.getElementById('mealResults').innerHTML = output;
+        } catch (error) {
+            document.getElementById('mealResults').innerHTML = <p>Error: ${error.message}</p>;
+        }
+    }
+
+    getMealByFirstLetter('a');
+</script>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Least Ingredient Meal</title>
+</head>
+<body>
+    <h1>Meal With Least Ingredients (A-Z)</h1>
+    <div id="mealResults"></div>
+
+<script>
+
+const baseurl = "https://www.themealdb.com/api/json/v1/1/search.php?f=";
+
+async function getMealWithLeastIngredients() {
+    let minMeal = null;
+    let minCount = Infinity;
+
+    try {
+        for (let i = 97; i <= 122; i++) {
+            let letter = String.fromCharCode(i);
+
+            const response = await fetch(`${baseurl}${letter}`);
+            const data = await response.json();
+
+            if (!data.meals) continue;
+
+            for (const meal of data.meals) {
+
+                let count = 0;
+
+                for (let j = 1; j <= 20; j++) {
+                    if (meal[`strIngredient${j}`] &&
+                        meal[`strIngredient${j}`].trim() !== "") {
+                        count++;
+                    }
+                }
+
+                if (count < minCount) {
+                    minCount = count;
+                    minMeal = meal;
+                }
+            }
+        }
+
+        if (minMeal) {
+            document.getElementById("mealResults").innerHTML = `
+                <h2>${minMeal.strMeal}</h2>
+                <p>Ingredient Count: ${minCount}</p>
+            `;
+        } else {
+            document.getElementById("mealResults").innerHTML = "No meals found.";
+        }
+
+    } catch (error) {
+        document.getElementById("mealResults").innerHTML = 
+            `<p>Error: ${error.message}</p>`;
+    }
+}
+
+getMealWithLeastIngredients();
+
+</script>
+</body>
+</html>

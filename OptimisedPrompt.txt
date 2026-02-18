@@ -1,0 +1,65 @@
+Optimized Prompt Version
+I am using TheMealDB API:
+
+https://www.themealdb.com/api/json/v1/1/search.php?f=a
+
+My goal is:
+
+Fetch all meals from A to Z
+
+Count the number of ingredients for each meal
+
+Return the meal that has the least ingredients
+
+I wrote the following HTML + JavaScript code, but:
+
+It is not fetching ingredients correctly
+
+I might be using the wrong endpoint
+
+I may have syntax errors
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch meals by less ingredients</title>
+</head>
+<body>
+    <h1>Fetch meals by less ingredients</h1>
+    <div id="mealResults"></div>
+
+</body>
+<script>
+
+    const baseurl = "https://www.themealdb.com/api/json/v1/1/filter.php?f=a";
+
+    async function getMealByFirstLetter(x) {
+        try {
+            const response = await fetch(${baseurl}${x});
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            const meals = data.meals;
+            let output = <h2>Meals starting with '${x}':</h2><ul>;
+            if (Array.isArray(meals) && meals.length > 0) {
+                for (const meal of meals) {
+                    output += <li>${meal.strMeal}</li>;
+                }
+            } else {
+                output += '<li>No meals found.</li>';
+            }
+            output += '</ul>';
+            document.getElementById('mealResults').innerHTML = output;
+        } catch (error) {
+            document.getElementById('mealResults').innerHTML = <p>Error: ${error.message}</p>;
+        }
+    }
+
+    getMealByFirstLetter('a');
+</script>
+</html>
+
+
+
